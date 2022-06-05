@@ -1,0 +1,14 @@
+{
+  "private": "true",
+  "description": "Example Worker, used for testing FlareUtils.",
+  "scripts": {
+    "build": "wrangler pages functions build --outfile static/_worker.js",
+    "start": "wrangler pages dev static -k KV"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "wrangler": "^2.0.5"
+  }
+}
