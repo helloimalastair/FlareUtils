@@ -1,19 +1,33 @@
-// For the most part, BetterKV should stick to the Workers KVNamespace type, other than how it is instantiated, and the fact that all methods(except delete) support cacheTtl. For KV API, see https://developers.cloudflare.com/workers/runtime-apis/kv, and the types this module exports.
-
 function normalizeCacheTtl(cacheTtl?: number) : number {
   if(!cacheTtl || cacheTtl <= 60) return 60;
   return cacheTtl;
 }
 
 /**
- * A Storage namespace that uses the Cloudflare Workers KV API to store data, with a Cache API backing that allows you to reduce your KV billable reads.
+ * A Storage namespace that uses the Cloudflare Workers [KV API](https://developers.cloudflare.com/workers/runtime-apis/kv) to store data, with a [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache) backing that allows you to reduce your KV billable reads.
+ * 
+ * For the most part, *BetterKV* should match to the Workers *KVNamespace* standard, other than how it is instantiated, and all methods(except delete) support cacheTtl. For the *KVNamespace* API, see the [types](https://github.com/cloudflare/workers-types) supplied by Cloudflare.
  */
 export class BetterKV {
+  /**
+   * Base URL used by BetterKV in Cache Operations.
+   */
   private readonly url: string = "https://better.kv/";
+  /**
+   * Root KV instance utilized by BetterKV.
+   */
   private readonly kv: KVNamespace<string>;
+  /**
+   * Utilized to ensure that any operations performed on the cache do not block the main thread.
+   */
   private waitUntil: ExecutionContext["waitUntil"] | undefined;
-  private cacheSpace: string;
+  /**
+   * Cache instance utilized by BetterKV.
+   */
   private cache: Cache | undefined;
+  /**
+   * Can be used to check whether the custom cache has been warmed up. If it is not false, use await on it to wait for the cache to be warmed up.
+   */
   warmingCache: Promise<void> | false;
 
   /**
@@ -27,38 +41,40 @@ export class BetterKV {
   constructor(kv: KVNamespace, waitUntil: ExecutionContext["waitUntil"], cacheSpace?: string) {
     this.kv = kv;
     this.waitUntil = waitUntil;
-    this.cacheSpace = cacheSpace ?? "BetterKV";
-    this.warmingCache = this.startCache();
+    this.warmingCache = this.startCache(cacheSpace ?? "BetterKV");
   }
 
   /**
    * Instantiates a BetterKV Cache Instance. Asynchronous function, run at the beginning of every publicly exposed function.
+   * @param {string} cacheSpace The name utilized to create a dedicated cache for this BetterKV instance. If you have multiple instances of BetterKV running in parallel, make sure each has their own unique cacheSpace.
    * @private
   */
-  private async startCache() : Promise<void> {
-    this.cache = await caches.open(this.cacheSpace);
+  private async startCache(cacheSpace: string) : Promise<void> {
+    this.cache = await caches.open(cacheSpace);
     this.warmingCache = false;
   }
 
   /**
-   * Normalizes cacheTtl values to a number greater than or equal to 60.
-   * @private
-  */
-
-  /**
-   * Used to update the waitUntil function to the ExecutionContext of the currently executing request.
-   * @param {ExecutionContext["waitUntil"]} waitUntil The waitUntil function used to asyncronously update the cache. Must be passed in before executing any other methods on every new request.
+   * Used to update the waitUntil function to the ExecutionContext of the currently executing request. Should be passed in before executing any other methods on every new request.
+   * @param {ExecutionContext["waitUntil"]} waitUntil The waitUntil function used to asyncronously update the cache.
   */
   setWaitUntil(waitUntil: ExecutionContext["waitUntil"]) : void {
     this.waitUntil = waitUntil;
   }
+
+  /* Typed KV Get Responses */
+  async get(key: string, options: BetterKVGetOptions): Promise<string | null>;
+  async get(key: string, options: BetterKVTypedGetOptions<"text">): Promise<string | null>;
+  async get(key: string, options: BetterKVTypedGetOptions<"arrayBuffer">): Promise<ArrayBuffer | null>;
+  async get(key: string, options: BetterKVTypedGetOptions<"stream">): Promise<ReadableStream | null>;
+  async get<V = any>(key: string, options: BetterKVTypedGetOptions<"json">): Promise<V | null>;
 
   /**
    * Retrieves a value from the BetterKV Namespace.
    * @template K The type of the value. Only used if using the "json" type.
    * @param {string} key The key to retrieve.
    * @param {BetterKVGetOptions} options Options for the retrieval.
-   * @returns {Promise<string | null>} The value of the key, or null if the key does not exist.
+   * @returns {Promise<BetterKVGetReturns | null>} The value of the key, or null if the key does not exist.
    * @example
    * const value = await NAMESPACE.get(key);
   */
@@ -86,8 +102,6 @@ export class BetterKV {
           return await bodyVal.text();
       }
     }
-    
-    console.log(type);
     switch(type) {
       case "text":
         const textVal = await this.kv.get(key, { type: "text" }) as string | undefined;
@@ -112,15 +126,23 @@ export class BetterKV {
     }
   }
 
+
+  /* Typed KV Get(with Metadata) Responses */
+  async getWithMetadata<M = any>(key: string, options: BetterKVGetOptions): Promise<BetterKVWithMetadata<string, M> | null>;
+  async getWithMetadata<M = any>(key: string, options: BetterKVTypedGetOptions<"text">): Promise<BetterKVWithMetadata<string, M> | null>;
+  async getWithMetadata<M = any>(key: string, options: BetterKVTypedGetOptions<"arrayBuffer">): Promise<BetterKVWithMetadata<ArrayBuffer, M> | null>;
+  async getWithMetadata<M = any>(key: string, options: BetterKVTypedGetOptions<"stream">): Promise<BetterKVWithMetadata<ReadableStream, M> | null>;
+  async getWithMetadata<V = any, M = any>(key: string, options: BetterKVTypedGetOptions<"json">): Promise<BetterKVWithMetadata<V, M> | null>;
+
   /**
    * Retrieves a value from the BetterKV Namespace, and its associated metadata, if provided.
    * @template V The type of the value. Only used if using the "json" type.
    * @template M The type of the metadata.
    * @param {string} key The key to retrieve.
    * @param {BetterKVGetOptions} options Options for the retrieval.
-   * @returns {Promise<BetterKVGetReturns>} The value of the key, and its associated metadata(if any), or null if the key does not exist.
+   * @returns {Promise<BetterKVWithMetadata<BetterKVGetReturns, M> | null>} The value of the key, and its associated metadata(if any), or null if the key does not exist.
   */
-  async getWithMetadata<V = any, M = any>(key: string, options?: BetterKVGetOptions): Promise<BetterKVGetReturns | null> {
+  async getWithMetadata<V = any, M = any>(key: string, options?: BetterKVGetOptions): Promise<BetterKVWithMetadata<BetterKVGetReturns, M> | null> {
     const cacheKey = this.url + key,
       cacheTTL = normalizeCacheTtl(options.cacheTtl),
       type = options.type || "text";
@@ -262,11 +284,21 @@ export class BetterKV {
   }
 };
 
-export type BetterKVGetReturns = string | any | ArrayBuffer | ReadableStream;
+export type BetterKVGetReturns<V = any> = string | V | ArrayBuffer | ReadableStream;
+
+export interface BetterKVTypedGetOptions<L extends string> {
+  type: L;
+  cacheTtl?: number;
+}
 
 export interface BetterKVGetOptions {
-  type: "text" | "json" | "arrayBuffer" | "stream" | string;
+  type?: BetterKVTypeOptions;
   cacheTtl?: number;
+}
+
+export interface BetterKVWithMetadata<V, M> {
+  value: V;
+  metadata: M;
 }
 
 export interface BetterKVPutOptions<K = any> {

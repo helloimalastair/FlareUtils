@@ -51,7 +51,10 @@ interface DrandResponse {
   previous_signature: string;
 }
 
-type IsaacSeed = string | number | number[];
+/**
+ * Supported seed types for Isaac.
+ */
+export type IsaacSeed = string | number | number[];
 
 function toIntArray(str: string) : number[] {
   let w1: number, w2: number, u: number, r4: number[] = [], r: number[] = [], i = 0;
@@ -112,8 +115,8 @@ function seed_mix(arr: number[]) : number[] {
 }
 
 /**
- * Cryptographically-secure random number generator. Based on the ISAAC algorithm by Bob Jenkins, and the original JS implementation by Yves-Marie Rinquin. Backed by crypto.getRandomValues, and the Drand network.
- */
+ * Cryptographically-secure random number generator. Based on the [ISAAC algorithm](http://burtleburtle.net/bob/rand/isaac.html) by [Bob Jenkins](http://burtleburtle.net/bob/), and the JS implementation by [Yves-Marie K. Rinquin](https://github.com/rubycon). Backed by [crypto.getRandomValues](https://developer.mozilla.org/en-US/docs/Web/API/Crypto/getRandomValues), and the [DRAND](https://drand.love) network.
+*/
 export class Isaac {
   private readonly runs: number;
   private m: number[];
@@ -122,10 +125,13 @@ export class Isaac {
   private cnt: number;
   private r: number[];
   private gnt: number;
+  /**
+   * This promise represents whether the seeding process has been completed. It is recommended that you create the Isaac object as early as possible, do other tasks as needed, and then *await* the promise afterward to ensure that the seeding process has completed. If it is *false*, then the seeding process has completed, and no *await* is necessary.
+   */
   seeding: Promise<void> | false;
 
   /**
-   * Creates a new Isaac CSPRNG. Note that you must await seedProm before using the generator.
+   * Creates a new Isaac CSPRNG. Note that you must await `seeding` before using the generator.
    * @param {IsaacSeed} seed Seed to be fed into the generator.
    * @param {number} runs Number of times to re-run the generator.
    * @constructor
@@ -194,7 +200,7 @@ export class Isaac {
   };
 
   /**
-   * Seeds the generator. Note that you must await seedProm before using the generator, if not manually seeded and awaited.
+   * Seeds the generator. Note that you must await `seeding` before using the generator, if not manually seeded and awaited.
    * @param {IsaacSeed} seed Seed to be fed into the generator
    * @returns {Promise<void>} Promise that resolves when the generator has been seeded
    * @async
@@ -241,7 +247,7 @@ export class Isaac {
 
   /**
    * Returns a pre-generated random number from the number buffer.
-   * @returns {number} A random number
+   * @returns {number} A random number between 0 and 1
    * @example
    * const num = isaac.rand();
    */
