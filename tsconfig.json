@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
     "target": "esnext",
-    "module": "esnext",
+    "module": "system",
     "lib": ["esnext"],
-    "noEmit": true,
+    "outFile": "dist/index.js",
+    "declaration": true,
     "types": [
       "@cloudflare/workers-types"
     ],
     "moduleResolution": "node"
   },
-  "include": ["src", "example"]
+  "include": ["src"]
 }

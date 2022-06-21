@@ -1,3 +1,34 @@
+export declare type BetterKVGetReturns<V = any> = string | V | ArrayBuffer | ReadableStream;
+
+export declare interface BetterKVTypedGetOptions<L extends string> {
+  type: L;
+  cacheTtl?: number;
+}
+
+export declare interface BetterKVGetOptions {
+  type?: BetterKVTypeOptions;
+  cacheTtl?: number;
+}
+
+export declare interface BetterKVWithMetadata<V, M> {
+  value: V;
+  metadata: M;
+}
+
+export declare interface BetterKVPutOptions<K = any> {
+  expiration?: number;
+  expirationTtl?: number;
+  metadata?: K | null;
+  cacheTtl?: number;
+}
+
+export declare interface BetterKVListOptions extends KVNamespaceListOptions {
+  cacheTtl?: number;
+}
+
+export declare type BetterKVTypeOptions = "text" | "json" | "arrayBuffer" | "stream";
+export declare type BetterKVValueOptions = string | ArrayBuffer | ArrayBufferView | ReadableStream;
+
 function normalizeCacheTtl(cacheTtl?: number) : number {
   if(!cacheTtl || cacheTtl <= 60) return 60;
   return cacheTtl;
@@ -35,9 +66,10 @@ export class BetterKV {
    * @param {KVNamespace} kv The KV Namespace to use as the primary data store.
    * @param {ExecutionContext["waitUntil"]} waitUntil The waitUntil function used to asyncronously update the cache. Must be passed in before executing any other methods on every new request.
    * @param {string} cacheSpace The name utilized to create a dedicated cache for this BetterKV instance. If you have multiple instances of BetterKV running in parallel, make sure each has their own unique cacheSpace.
-   * @example
+   * @example ```ts
    * const NAMESPACE = new BetterKV(env.KV, "BetterKVNamespace");
-  */
+   * ```
+   */
   constructor(kv: KVNamespace, waitUntil: ExecutionContext["waitUntil"], cacheSpace?: string) {
     this.kv = kv;
     this.waitUntil = waitUntil;
@@ -75,9 +107,10 @@ export class BetterKV {
    * @param {string} key The key to retrieve.
    * @param {BetterKVGetOptions} options Options for the retrieval.
    * @returns {Promise<BetterKVGetReturns | null>} The value of the key, or null if the key does not exist.
-   * @example
+   * @example ```ts
    * const value = await NAMESPACE.get(key);
-  */
+   * ```
+   */
   async get<V = any>(key: string, options?: BetterKVGetOptions): Promise<BetterKVGetReturns | null> {
     const cacheKey = this.url + key,
       cacheTTL = normalizeCacheTtl(options.cacheTtl),
@@ -212,9 +245,10 @@ export class BetterKV {
    * @param {string} key The key to add.
    * @param {BetterKVValueOptions} val The value to add. Type is inferred from the value.
    * @param {BetterKVAddOptions} options Options for the addition.
-   * @example
+   * @example ```ts
    * await NAMESPACE.put(key, value);
-  */
+   * ```
+   */
   async put<M = any>(key: string, val: BetterKVValueOptions, options: BetterKVPutOptions<M>): Promise<void> {
     const cacheKey = this.url + key;
     let { cacheTtl, ...putOptions } = options;
@@ -240,9 +274,10 @@ export class BetterKV {
   /**
    * Removes a value from the BetterKV Namespace.
    * @param {string} key The key to remove.
-   * @example
+   * @example ```ts
    * await NAMESPACE.delete(key);
-  */
+   * ```
+   */
   async delete(key: string): Promise<void> {
     this.waitUntil(this.cache.delete(this.url + key));
     await this.kv.delete(key);
@@ -251,11 +286,12 @@ export class BetterKV {
   /**
    * Lists keys in the BetterKV Namespace according to the options given. Supports CacheTtl.
    * @template M The type of the metadata.
-   * @param {BetterKVListOptions} options Options for the listing.
+   * @param {BetterKVListOptions} [options] Options for the listing.
    * @returns {Promise<BetterKVListReturns<M>>} The keys in the namespace, and their associated metadata(if any).
-   * @example
+   * @example ```ts
    * const {keys, list_complete, cursor} = await NAMESPACE.list();
-  */
+   * ```
+   */
   async list<M = any>(opts?: BetterKVListOptions): Promise<KVNamespaceListResult<M>> {
     let {cacheTtl, prefix, limit, cursor} = opts,
       cacheKey = new URL("https://list.better.kv");
@@ -283,34 +319,3 @@ export class BetterKV {
     return result;
   }
 };
-
-export type BetterKVGetReturns<V = any> = string | V | ArrayBuffer | ReadableStream;
-
-export interface BetterKVTypedGetOptions<L extends string> {
-  type: L;
-  cacheTtl?: number;
-}
-
-export interface BetterKVGetOptions {
-  type?: BetterKVTypeOptions;
-  cacheTtl?: number;
-}
-
-export interface BetterKVWithMetadata<V, M> {
-  value: V;
-  metadata: M;
-}
-
-export interface BetterKVPutOptions<K = any> {
-  expiration?: number;
-  expirationTtl?: number;
-  metadata?: K | null;
-  cacheTtl?: number;
-}
-
-export interface BetterKVListOptions extends KVNamespaceListOptions {
-  cacheTtl?: number;
-}
-
-export type BetterKVTypeOptions = "text" | "json" | "arrayBuffer" | "stream";
-export type BetterKVValueOptions = string | ArrayBuffer | ArrayBufferView | ReadableStream;

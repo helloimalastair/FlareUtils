@@ -1,5 +1,5 @@
-export type RandNum = () => number;
-export type RandLetter = () => string;
+export declare type RandNum = () => number;
+export declare type RandLetter = () => string;
 
 function randOf(collection: string, rand: RandNum): RandLetter {
   return () => collection[Math.floor(rand() * collection.length)];

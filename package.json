@@ -14,15 +14,17 @@
 	"main": "src/index.ts",
 	"scripts": {
 		"check": "tsc",
-		"docs": "typedoc"
+		"docs": "typedoc",
+		"serve": "serve docs"
 	},
 	"files": [
-		"src",
+		"dist",
 		"tsconfig.json",
 		"README.md"
 	],
 	"devDependencies": {
 		"@cloudflare/workers-types": "^3.10.0",
+		"serve": "^13.0.2",
 		"typedoc": "^0.22.17",
 		"typescript": "^4.6.4"
 	}

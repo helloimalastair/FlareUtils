@@ -44,7 +44,7 @@
  *
  */
 
-interface DrandResponse {
+export declare interface DrandResponse {
   round: number;
   randomness: string;
   signature: string;
@@ -54,7 +54,7 @@ interface DrandResponse {
 /**
  * Supported seed types for Isaac.
  */
-export type IsaacSeed = string | number | number[];
+export declare type IsaacSeed = string | number | number[];
 
 function toIntArray(str: string) : number[] {
   let w1: number, w2: number, u: number, r4: number[] = [], r: number[] = [], i = 0;
@@ -204,9 +204,10 @@ export class Isaac {
    * @param {IsaacSeed} seed Seed to be fed into the generator
    * @returns {Promise<void>} Promise that resolves when the generator has been seeded
    * @async
-   * @example
+   * @example ```ts
    * await isaac.seed(seed);
-  */
+   * ```
+   */
   async seed(seed: IsaacSeed) : Promise<void> {
     let arr : number[] = Array.from(crypto.getRandomValues(new Uint32Array(9))),
      s: number[],
@@ -248,8 +249,9 @@ export class Isaac {
   /**
    * Returns a pre-generated random number from the number buffer.
    * @returns {number} A random number between 0 and 1
-   * @example
+   * @example ```ts
    * const num = isaac.rand();
+   * ```
    */
   rand() : number {
     if(!this.gnt--) {
