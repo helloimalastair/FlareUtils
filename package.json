@@ -7,7 +7,7 @@
 		"utilies",
 		"cloudflare"
 	],
-	"homepage": "flareutils",
+	"homepage": "https://flareutils.pages.dev",
 	"license": "See LICENSE",
 	"author": "helloimalastair",
 	"repository": "github:helloimalastair/flareutils",
@@ -23,9 +23,9 @@
 		"README.md"
 	],
 	"devDependencies": {
-		"@cloudflare/workers-types": "^3.10.0",
+		"@cloudflare/workers-types": "^3.14.0",
 		"serve": "^13.0.2",
-		"typedoc": "^0.22.17",
-		"typescript": "^4.6.4"
+		"typedoc": "^0.23.5",
+		"typescript": "^4.7.4"
 	}
 }
