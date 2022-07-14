@@ -1,6 +1,6 @@
 {
 	"name": "flareutils",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
 	"keywords": [
 		"flare",
