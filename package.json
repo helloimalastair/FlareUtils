@@ -1,6 +1,6 @@
 {
 	"name": "flareutils",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
 	"keywords": [
 		"flare",
@@ -13,7 +13,7 @@
 	"repository": "github:helloimalastair/flareutils",
 	"main": "src/index.ts",
 	"scripts": {
-		"check": "tsc",
+		"build": "tsc",
 		"docs": "typedoc",
 		"serve": "serve docs"
 	},
