@@ -11,7 +11,7 @@
 	"license": "See LICENSE",
 	"author": "helloimalastair",
 	"repository": "github:helloimalastair/flareutils",
-	"main": "src/index.ts",
+	"main": "dist/index.js",
 	"scripts": {
 		"build": "tsc",
 		"docs": "typedoc",
