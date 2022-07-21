@@ -1,6 +1,6 @@
 {
 	"name": "flareutils",
-	"version": "0.3.2",
+	"version": "0.3.3",
 	"description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
 	"keywords": [
 		"flare",
@@ -11,16 +11,14 @@
 	"license": "See LICENSE",
 	"author": "helloimalastair",
 	"repository": "github:helloimalastair/flareutils",
-	"main": "dist/index.js",
+	"main": "src/index.ts",
 	"scripts": {
-		"build": "run-p build:*",
-    "build:ts": "tsc",
-    "build:js": "node build.mjs",
+    "check": "tsc",
 		"docs": "typedoc",
 		"serve": "serve docs"
 	},
 	"files": [
-		"dist",
+		"src",
 		"tsconfig.json",
 		"README.md"
 	],

@@ -3,13 +3,12 @@
     "target": "esnext",
     "module": "esnext",
     "lib": ["esnext"],
-    "outFile": "dist/index.js",
     "declaration": true,
-    "emitDeclarationOnly": true,
     "types": [
       "@cloudflare/workers-types"
     ],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "noEmit": true
   },
   "include": ["src"]
 }

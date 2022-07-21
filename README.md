@@ -7,5 +7,5 @@ Currently comprised of *six* modules:
 * [Isaac](https://flareutils.pages.dev/classes/Isaac)
 * [Phonetic](https://flareutils.pages.dev/classes/Phonetic)
 * [Temra](https://flareutils.pages.dev/classes/Temra)
-* [MailChannels](https://flareutils.pages.dev/classes/MailChannels)
+* [sendMail](http://flareutils.pages.dev/functions/sendMail)
 * [Stubby](https://flareutils.pages.dev/classes/Stubby)
