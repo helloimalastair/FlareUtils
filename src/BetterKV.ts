@@ -11,8 +11,8 @@ export declare interface BetterKVGetOptions {
 }
 
 export declare interface BetterKVWithMetadata<V, M> {
-  value: V;
-  metadata: M;
+  value: V | null;
+  metadata: M | null;
 }
 
 export declare interface BetterKVPutOptions<K = any> {
@@ -175,6 +175,16 @@ export class BetterKV {
    * @param {BetterKVGetOptions} options Options for the retrieval.
    * @returns {Promise<BetterKVWithMetadata<BetterKVGetReturns, M> | null>} The value of the key, and its associated metadata(if any), or null if the key does not exist.
   */
+  /*
+  Promise<
+  {
+    value: string | V | ArrayBuffer | ReadableStream;
+    metadata: M;
+  }
+  |
+  null
+  >
+  */
   async getWithMetadata<V = any, M = any>(key: string, options?: BetterKVGetOptions): Promise<BetterKVWithMetadata<BetterKVGetReturns, M> | null> {
     const cacheKey = this.url + key,
       cacheTTL = normalizeCacheTtl(options?.cacheTtl),
@@ -293,11 +303,10 @@ export class BetterKV {
    * ```
    */
   async list<M = any>(opts?: BetterKVListOptions): Promise<KVNamespaceListResult<M>> {
-    let {cacheTtl, prefix, limit, cursor} = opts,
+    let prefix = opts?.prefix, limit = opts?.limit, cursor = opts?.cursor,
       cacheKey = new URL("https://list.better.kv");
-    cacheTtl = normalizeCacheTtl(cacheTtl);
-    if(!limit && (limit < 1 || limit > 1000)) limit = 1000;
-    console.log(limit, limit < 1);
+    let cacheTtl = normalizeCacheTtl(opts?.cacheTtl);
+    if(limit && (limit < 1 || limit > 1000)) limit = 1000;
     if(prefix) cacheKey.searchParams.set("prefix", prefix);
     if(limit) cacheKey.searchParams.set("limit", limit.toString());
     if(cursor) cacheKey.searchParams.append("cursor", cursor);

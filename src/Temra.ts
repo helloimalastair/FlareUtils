@@ -111,17 +111,19 @@ export class Temra<E = any, O = any> {
         rewriter.on(selector, deleteElement);
         continue;
       }
-      let ElementHandler: HTMLRewriterElementContentHandlers;
+      let ElementHandler: HTMLRewriterElementContentHandlers = {};
       switch(replacer.type) {
         case "universal":
         case "tagName":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
           }
           break;
         case "attribute":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
             if(replacer.removeSelector) element.removeAttribute(selector);
@@ -129,6 +131,7 @@ export class Temra<E = any, O = any> {
           break;
         case "className":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
             if(replacer.removeSelector) {
@@ -139,13 +142,14 @@ export class Temra<E = any, O = any> {
           break;
         case "id":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
             if(replacer.removeSelector) element.removeAttribute("id");
           };
           break;
       }
-      rewriter.on(replacer[0], ElementHandler);
+      rewriter.on(selector, ElementHandler);
     }
     if(this.deleteComments) rewriter.onDocument({comments: (c: Comment) => {
       c.remove();
