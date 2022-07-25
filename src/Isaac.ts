@@ -89,7 +89,7 @@ function toIntArray(str: string) : number[] {
     /* add integer (four utf-8 value) to array */
     if(r4.length > 3) {
       // little endian
-      r.push((r4.shift() <<  0) | (r4.shift() <<  8) | (r4.shift() << 16) | (r4.shift() << 24));
+      r.push((r4.shift()! <<  0) | (r4.shift()! <<  8) | (r4.shift()! << 16) | (r4.shift()! << 24));
     }
   }
 
