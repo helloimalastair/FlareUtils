@@ -8,7 +8,8 @@
       "@cloudflare/workers-types"
     ],
     "moduleResolution": "node",
-    "noEmit": true
+    "noEmit": true,
+    "strict": true
   },
   "include": ["src"]
 }
