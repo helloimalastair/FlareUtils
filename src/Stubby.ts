@@ -78,7 +78,7 @@ export class Stubby {
       for(const key of listRet.keys)
         keys.push(this.kv.delete(key.name));
       if(listRet.list_complete) break;
-      cursor = listRet.cursor;
+      if(typeof(listRet.cursor) === 'string') cursor = listRet.cursor;
     }
     await Promise.allSettled(keys);
     this.stubMap.clear();

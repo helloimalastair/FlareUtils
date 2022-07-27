@@ -71,9 +71,9 @@ export class Temra<E = any, O = any> {
    */
   add<E = any>(selector: string, replacerFunction?: ReplaceFunction<E, O>, options?: AddOptions): Temra {
     // If replaceFunction is not defined, then matched Elements are removed
-    const replacer: Replacer = {replacerFunction, type: options.selectorType || "className"};
-    if(options.removeSelector) replacer.removeSelector = true;
-    switch(options.selectorType) {
+    const replacer: Replacer = {replacerFunction, type: options?.selectorType || "className"};
+    if(options?.removeSelector) replacer.removeSelector = true;
+    switch(options?.selectorType) {
       case "universal":
         this.replacers[selector] = replacer;
         break;
@@ -90,7 +90,7 @@ export class Temra<E = any, O = any> {
         this.replacers[`*[${selector}${options.attributeValue}]`] = replacer;
         break;
       default:
-        throw new Error(`Unknown selector type: ${options.selectorType}`);
+        throw new Error(`Unknown selector type: ${options?.selectorType}`);
     }
     return this;
   }
@@ -111,17 +111,19 @@ export class Temra<E = any, O = any> {
         rewriter.on(selector, deleteElement);
         continue;
       }
-      let ElementHandler: HTMLRewriterElementContentHandlers;
+      let ElementHandler: HTMLRewriterElementContentHandlers = {};
       switch(replacer.type) {
         case "universal":
         case "tagName":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
           }
           break;
         case "attribute":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
             if(replacer.removeSelector) element.removeAttribute(selector);
@@ -129,23 +131,25 @@ export class Temra<E = any, O = any> {
           break;
         case "className":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
             if(replacer.removeSelector) {
               const allClasses = element.getAttribute("class");
-              element.setAttribute("class", allClasses.split(" ").filter(e => e !== selector).join(" "));
+              if (allClasses) element.setAttribute("class", allClasses.split(" ").filter(e => e !== selector).join(" "));
             }
           };
           break;
         case "id":
           ElementHandler.element = async (element: Element) => {
+            if (!replacer.replacerFunction) return;
             const content = await replacer.replacerFunction(element, optionals);
             element.replace(content, {html: replacer.isHTML});
             if(replacer.removeSelector) element.removeAttribute("id");
           };
           break;
       }
-      rewriter.on(replacer[0], ElementHandler);
+      rewriter.on(selector, ElementHandler);
     }
     if(this.deleteComments) rewriter.onDocument({comments: (c: Comment) => {
       c.remove();
