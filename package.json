@@ -1,6 +1,6 @@
 {
 	"name": "flareutils",
-	"version": "0.3.3",
+	"version": "0.3.4",
 	"description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
 	"keywords": [
 		"flare",
@@ -13,9 +13,9 @@
 	"repository": "github:helloimalastair/flareutils",
 	"main": "src/index.ts",
 	"scripts": {
-    "check": "tsc",
+		"check": "tsc",
 		"docs": "typedoc",
-		"serve": "serve docs"
+		"deploy": "wrangler pages publish docs"
 	},
 	"files": [
 		"src",
@@ -23,11 +23,9 @@
 		"README.md"
 	],
 	"devDependencies": {
-		"@cloudflare/workers-types": "^3.14.0",
-		"esbuild": "^0.14.49",
-		"npm-run-all": "^4.1.5",
-		"serve": "^13.0.2",
-		"typedoc": "^0.23.5",
-		"typescript": "^4.7.4"
+		"@cloudflare/workers-types": "^3.16.0",
+		"typedoc": "^0.23.15",
+		"typescript": "^4.8.4",
+		"wrangler": "^2.1.11"
 	}
 }
