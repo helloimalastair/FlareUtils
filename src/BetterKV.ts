@@ -29,8 +29,8 @@ export declare interface BetterKVListOptions extends KVNamespaceListOptions {
 export declare type BetterKVTypeOptions = "text" | "json" | "arrayBuffer" | "stream";
 export declare type BetterKVValueOptions = string | ArrayBuffer | ArrayBufferView | ReadableStream;
 
-function normalizeCacheTtl(cacheTtl?: number) : number {
-  if(!cacheTtl || cacheTtl <= 60) return 60;
+function normalizeCacheTtl(cacheTtl?: number): number {
+  if (!cacheTtl || cacheTtl <= 60) return 60;
   return cacheTtl;
 }
 
@@ -67,7 +67,7 @@ export class BetterKV {
    * @param {ExecutionContext["waitUntil"]} waitUntil The waitUntil function used to asyncronously update the cache. Must be passed in before executing any other methods on every new request.
    * @param {string} cacheSpace The name utilized to create a dedicated cache for this BetterKV instance. If you have multiple instances of BetterKV running in parallel, make sure each has their own unique cacheSpace.
    * @example ```ts
-   * const NAMESPACE = new BetterKV(env.KV, "BetterKVNamespace");
+   * const NAMESPACE = new BetterKV(env.KV, ctx.waitUntil, "BetterKVNamespace");
    * ```
    */
   constructor(kv: KVNamespace, waitUntil: ExecutionContext["waitUntil"], cacheSpace?: string) {
@@ -81,7 +81,7 @@ export class BetterKV {
    * @param {string} cacheSpace The name utilized to create a dedicated cache for this BetterKV instance. If you have multiple instances of BetterKV running in parallel, make sure each has their own unique cacheSpace.
    * @private
   */
-  private async startCache(cacheSpace: string) : Promise<void> {
+  private async startCache(cacheSpace: string): Promise<void> {
     this.cache = await caches.open(cacheSpace);
     this.warmingCache = false;
   }
@@ -90,7 +90,7 @@ export class BetterKV {
    * Used to update the waitUntil function to the ExecutionContext of the currently executing request. Should be passed in before executing any other methods on every new request.
    * @param {ExecutionContext["waitUntil"]} waitUntil The waitUntil function used to asyncronously update the cache.
   */
-  setWaitUntil(waitUntil: ExecutionContext["waitUntil"]) : void {
+  setWaitUntil(waitUntil: ExecutionContext["waitUntil"]): void {
     this.waitUntil = waitUntil;
   }
 
@@ -118,13 +118,13 @@ export class BetterKV {
       headers = new Headers({ "Cloudflare-CDN-Cache-Control": `max-age=${cacheTTL}` });
     let bodyVal = await this.cache?.match(cacheKey);
 
-    if(bodyVal) {
-      if(options && options.cacheTtl) {
+    if (bodyVal) {
+      if (options && options.cacheTtl) {
         bodyVal = new Response(bodyVal.body, bodyVal);
         bodyVal.headers.set("Cloudflare-CDN-Cache-Control", `max-age=${cacheTTL}`);
         this.waitUntil(this.cache?.put(cacheKey, bodyVal) ?? Promise.resolve());
       }
-      switch(options?.type) {
+      switch (options?.type) {
         case "json":
           return await bodyVal.json() as V;
         case "arrayBuffer":
@@ -135,26 +135,26 @@ export class BetterKV {
           return await bodyVal.text();
       }
     }
-    switch(type) {
+    switch (type) {
       case "text":
         const textVal = await this.kv.get(key, { type: "text" }) as string | undefined;
-        if(!textVal) return null;
-        this.waitUntil(this.cache?.put(cacheKey, new Response(textVal, {headers})) ?? Promise.resolve());
-        return textVal; 
+        if (!textVal) return null;
+        this.waitUntil(this.cache?.put(cacheKey, new Response(textVal, { headers })) ?? Promise.resolve());
+        return textVal;
       case "json":
         const jsonVal = await this.kv.get<V>(key, { type: "json" });
-        if(!jsonVal) return null;
-        this.waitUntil(this.cache?.put(cacheKey, new Response(JSON.stringify(jsonVal), {headers})) ?? Promise.resolve());
+        if (!jsonVal) return null;
+        this.waitUntil(this.cache?.put(cacheKey, new Response(JSON.stringify(jsonVal), { headers })) ?? Promise.resolve());
         return jsonVal;
       case "arrayBuffer":
         const bufVal = await this.kv.get(key, { type: "arrayBuffer" }) as ArrayBuffer | undefined;
-        if(!bufVal) return null;
-        this.waitUntil(this.cache?.put(cacheKey, new Response(bufVal, {headers})) ?? Promise.resolve());
+        if (!bufVal) return null;
+        this.waitUntil(this.cache?.put(cacheKey, new Response(bufVal, { headers })) ?? Promise.resolve());
         return bufVal;
       case "stream":
         const streamVal = await this.kv.get(key, { type: "stream" }) as ReadableStream | undefined;
-        if(!streamVal) return null;
-        this.waitUntil(this.cache?.put(cacheKey, new Response(streamVal, {headers})) ?? Promise.resolve());
+        if (!streamVal) return null;
+        this.waitUntil(this.cache?.put(cacheKey, new Response(streamVal, { headers })) ?? Promise.resolve());
         return streamVal;
     }
   }
@@ -185,23 +185,23 @@ export class BetterKV {
   null
   >
   */
-  async getWithMetadata<V = any, M = any>(key: string, options?: BetterKVGetOptions): Promise<BetterKVWithMetadata<BetterKVGetReturns, M> | null> {
+  async getWithMetadata<V = any, M = any>(key: string, options?: BetterKVGetOptions): Promise<BetterKVWithMetadata<BetterKVGetReturns<V>, M> | null> {
     const cacheKey = this.url + key,
       cacheTTL = normalizeCacheTtl(options?.cacheTtl),
       type = options?.type || "text";
     let bodyVal = await this.cache?.match(cacheKey);;
 
-    if(bodyVal) {
-      if(options && options.cacheTtl) {
+    if (bodyVal) {
+      if (options && options.cacheTtl) {
         bodyVal = new Response(bodyVal.body, bodyVal);
         bodyVal.headers.set("Cloudflare-CDN-Cache-Control", `max-age=${cacheTTL}`);
         this.waitUntil(this.cache?.put(cacheKey, bodyVal) ?? Promise.resolve());
       }
       const metadata = JSON.parse(bodyVal.headers.get("metadata") as string) as M;
-      switch(options?.type) {
+      switch (options?.type) {
         case "json":
           return {
-            value: await bodyVal.json() as any,
+            value: await bodyVal.json() as V,
             metadata
           };
         case "arrayBuffer":
@@ -222,30 +222,30 @@ export class BetterKV {
       }
     }
     const headers = new Headers({ "Cloudflare-CDN-Cache-Control": `max-age=${cacheTTL}` });
-    switch(type) {
+    switch (type) {
       case "text":
         const textVal = await this.kv.getWithMetadata<M>(key);
-        if(!textVal) return null;
-        if(textVal.metadata) headers.set("metadata", JSON.stringify(textVal.metadata));
-        this.waitUntil(this.cache?.put(cacheKey, new Response(textVal.value, {headers})) ?? Promise.resolve());
-        return textVal; 
+        if (!textVal) return null;
+        if (textVal.metadata) headers.set("metadata", JSON.stringify(textVal.metadata));
+        this.waitUntil(this.cache?.put(cacheKey, new Response(textVal.value, { headers })) ?? Promise.resolve());
+        return textVal;
       case "json":
         const jsonVal = await this.kv.getWithMetadata<V, M>(key, { type: "json" });
-        if(!jsonVal) return null;
-        if(jsonVal.metadata) headers.set("metadata", JSON.stringify(jsonVal.metadata));
-        this.waitUntil(this.cache?.put(cacheKey, new Response(JSON.stringify(jsonVal), {headers})) ?? Promise.resolve());
+        if (!jsonVal) return null;
+        if (jsonVal.metadata) headers.set("metadata", JSON.stringify(jsonVal.metadata));
+        this.waitUntil(this.cache?.put(cacheKey, new Response(JSON.stringify(jsonVal), { headers })) ?? Promise.resolve());
         return jsonVal;
       case "arrayBuffer":
         const bufVal = await this.kv.getWithMetadata<M>(key, { type: "arrayBuffer" });
-        if(!bufVal) return null;
-        if(bufVal.metadata) headers.set("metadata", JSON.stringify(bufVal.metadata));
-        this.waitUntil(this.cache?.put(cacheKey, new Response(bufVal.value, {headers})) ?? Promise.resolve());
+        if (!bufVal) return null;
+        if (bufVal.metadata) headers.set("metadata", JSON.stringify(bufVal.metadata));
+        this.waitUntil(this.cache?.put(cacheKey, new Response(bufVal.value, { headers })) ?? Promise.resolve());
         return bufVal;
       case "stream":
         const streamVal = await this.kv.getWithMetadata<M>(key, { type: "stream" });
-        if(!streamVal) return null;
-        if(streamVal.metadata) headers.set("metadata", JSON.stringify(streamVal.metadata));
-        this.waitUntil(this.cache?.put(cacheKey, new Response(streamVal.value, {headers})) ?? Promise.resolve());
+        if (!streamVal) return null;
+        if (streamVal.metadata) headers.set("metadata", JSON.stringify(streamVal.metadata));
+        this.waitUntil(this.cache?.put(cacheKey, new Response(streamVal.value, { headers })) ?? Promise.resolve());
         return streamVal;
     }
   }
@@ -264,20 +264,20 @@ export class BetterKV {
     let { cacheTtl, ...putOptions } = options;
     cacheTtl = normalizeCacheTtl(cacheTtl);
     const headers = new Headers({ "Cloudflare-CDN-Cache-Control": `max-age=${cacheTtl}` });
-    if(putOptions.metadata) headers.set("metadata", JSON.stringify(putOptions.metadata));
-    if(typeof val === "string" || val instanceof ArrayBuffer) {
-      this.waitUntil(this.cache?.put(cacheKey, new Response(val, {headers})) ?? Promise.resolve());
+    if (putOptions.metadata) headers.set("metadata", JSON.stringify(putOptions.metadata));
+    if (typeof val === "string" || val instanceof ArrayBuffer) {
+      this.waitUntil(this.cache?.put(cacheKey, new Response(val, { headers })) ?? Promise.resolve());
       await this.kv.put(key, val, putOptions);
       return;
     }
-    if(val instanceof ReadableStream) {
+    if (val instanceof ReadableStream) {
       const a = val.tee();
-      this.waitUntil(this.cache?.put(cacheKey, new Response(a[0], {headers})) ?? Promise.resolve());
+      this.waitUntil(this.cache?.put(cacheKey, new Response(a[0], { headers })) ?? Promise.resolve());
       await this.kv.put(key, a[1], putOptions);
       return;
     }
-    if(typeof val !== "object") throw new Error("Invalid Put Type");
-    this.waitUntil(this.cache?.put(cacheKey, new Response(JSON.stringify(val), {headers})) ?? Promise.resolve());
+    if (typeof val !== "object") throw new Error("Invalid Put Type");
+    this.waitUntil(this.cache?.put(cacheKey, new Response(JSON.stringify(val), { headers })) ?? Promise.resolve());
     await this.kv.put(key, val, putOptions);
   }
 
@@ -306,22 +306,22 @@ export class BetterKV {
     let prefix = opts?.prefix, limit = opts?.limit, cursor = opts?.cursor,
       cacheKey = new URL("https://list.better.kv");
     let cacheTtl = normalizeCacheTtl(opts?.cacheTtl);
-    if(limit && (limit < 1 || limit > 1000)) limit = 1000;
-    if(prefix) cacheKey.searchParams.set("prefix", prefix);
-    if(limit) cacheKey.searchParams.set("limit", limit.toString());
-    if(cursor) cacheKey.searchParams.append("cursor", cursor);
+    if (limit && (limit < 1 || limit > 1000)) limit = 1000;
+    if (prefix) cacheKey.searchParams.set("prefix", prefix);
+    if (limit) cacheKey.searchParams.set("limit", limit.toString());
+    if (cursor) cacheKey.searchParams.append("cursor", cursor);
 
     let bodyVal = await this.cache?.match(cacheKey.toString());
 
-    if(bodyVal) {
-      if(cacheTtl) {
+    if (bodyVal) {
+      if (cacheTtl) {
         bodyVal = new Response(bodyVal.body, bodyVal);
         bodyVal.headers.set("Cloudflare-CDN-Cache-Control", `max-age=${cacheTtl}`);
         this.waitUntil(this.cache?.put(cacheKey.toString(), bodyVal) ?? Promise.resolve());
       }
-      return await bodyVal.json() as KVNamespaceListResult<any>;
+      return await bodyVal.json() as KVNamespaceListResult<M>;
     }
-    const result = await this.kv.list<M>({prefix, limit, cursor});
+    const result = await this.kv.list<M>({ prefix, limit, cursor });
     this.waitUntil(this.cache?.put(cacheKey.toString(), new Response(JSON.stringify(result), {
       headers: { "Cloudflare-CDN-Cache-Control": `max-age=${cacheTtl}` }
     })) ?? Promise.resolve());
