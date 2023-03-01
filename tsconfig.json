@@ -11,5 +11,5 @@
     "noEmit": true,
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src", "tests/worker"]
 }

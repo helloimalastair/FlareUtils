@@ -1,6 +1,7 @@
 {
 	"name": "flareutils",
 	"version": "0.3.4",
+	"type": "module",
 	"description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
 	"keywords": [
 		"flare",
@@ -14,8 +15,9 @@
 	"main": "src/index.ts",
 	"scripts": {
 		"check": "tsc",
-		"docs": "typedoc",
-		"deploy": "wrangler pages publish docs"
+		"test": "NODE_NO_WARNINGS=1 vitest run",
+		"dev": "vitepress dev docs",
+		"build": "vitepress build docs"
 	},
 	"files": [
 		"src",
@@ -23,9 +25,21 @@
 		"README.md"
 	],
 	"devDependencies": {
-		"@cloudflare/workers-types": "^3.16.0",
-		"typedoc": "^0.23.15",
-		"typescript": "^4.8.4",
-		"wrangler": "^2.1.11"
-	}
+		"@cloudflare/workers-types": "^4.20230221.0",
+		"esbuild": "^0.17.10",
+		"hono": "^3.0.2",
+		"typescript": "^4.9.5",
+		"vitepress": "1.0.0-alpha.49",
+		"vitest": "^0.29.1",
+		"vitest-environment-miniflare": "^2.12.1",
+		"vue": "^3.2.47",
+		"wrangler": "^2.12.0"
+	},
+	"pnpm": {
+		"peerDependencyRules": {
+			"ignoreMissing": [
+				"@algolia/client-search"
+			]
+		}
+	}	
 }

@@ -40,9 +40,10 @@ export class Stubby {
   /**
    * Returns a stub from memory or KV, or generates a new stub if not available. Caches returned stubs to ensure quickest recall.
    * @param {string} key Used to identify stub for retrieval or creation.
+   * @param {string} [locationHint] Used to hint at the location of the stub, allowing for faster stub creation. Available hints are available on the [DO Docs](https://developers.cloudflare.com/workers/runtime-apis/durable-objects/#providing-a-location-hint).
    * @returns {Promise<DurableObjectStub>}
    */
-  async get(key: string): Promise<DurableObjectStub> {
+  async get(key: string, locationHint?: string): Promise<DurableObjectStub> {
     let stub = this.stubMap.get(key);
     if(stub) return stub;
     let idString = await this.kv.get(this.prefix + key);
@@ -53,7 +54,7 @@ export class Stubby {
     }
     let id = this.ns.newUniqueId();
     this.waitUntil(this.kv.put(this.prefix + key, id.toString()));
-    stub = this.ns.get(id);
+    stub = this.ns.get(id, { locationHint });
     this.stubMap.set(key, stub);
     return stub;
   }
@@ -77,8 +78,11 @@ export class Stubby {
       const listRet = await this.kv.list({prefix: this.prefix, cursor: cursor});
       for(const key of listRet.keys)
         keys.push(this.kv.delete(key.name));
-      if(listRet.list_complete) break;
-      if(typeof(listRet.cursor) === 'string') cursor = listRet.cursor;
+      if(listRet.list_complete) {
+        break;
+      } else {
+        cursor = listRet.cursor;
+      }
     }
     await Promise.allSettled(keys);
     this.stubMap.clear();

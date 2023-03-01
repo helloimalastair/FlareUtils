@@ -34,7 +34,7 @@ export declare interface MailChannelsOptions {
 
 /**
  * Helper to quickly send emails with the MailChannels API.
- * @note This helper function performs no verification of your inputs, and should only be used for utilizing types with MailChannels. Validation may be added at some point.
+ * @note This helper function performs no verification of your inputs, and should only be used for utilizing types with MailChannels.
  * @param {MailChannelsOptions} opts Options that the MailChannels API may accept when sending an email.
  * @returns {Promise<Response>} Response from the MailChannels API.
  * @example ```ts

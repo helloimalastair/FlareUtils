@@ -1,0 +1,16 @@
+User-Agent: DuckDuckBot
+User-Agent: AppleBot
+User-Agent: GoogleBot
+User-Agent: BingBot
+User-Agent: Slurp
+User-Agent: facebot
+User-Agent: Mozilla/5.0 (compatible; Konqueror/3.5; Linux) KHTML/3.5.5 (like Gecko) (Exabot-Thumbnails), Mozilla/5.0 (compatible; Exabot/3.0; +http://www.exabot.com/go/robot)
+Allow: /
+
+User-Agent: AdsBot-Google-Mobile
+User-Agent: AdsBot-Google
+User-Agent: AdsBot-Google-Mobile-Apps
+User-Agent: *
+Disallow: /
+
+Sitemap: https://flareutils.pages.dev/sitemap.xml
