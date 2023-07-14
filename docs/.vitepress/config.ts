@@ -26,6 +26,11 @@ export default defineConfig({
     writeFileSync("dist/docs/sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${getAllFiles("dist/docs").map(e => `<url><loc>${e}</loc></url>`).join("")}</urlset>`);
   },
   themeConfig: {
+    algolia: {
+      appId: "XA1O8DZHW5",
+      apiKey: "671076a2197d38a9d19a35c2db13b803",
+      indexName: "flareutils"
+    },
     outline: "deep",
     footer: {
       message: "Released under the MIT License.",

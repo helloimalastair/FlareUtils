@@ -1,0 +1,14 @@
+# Don't use this to deploy an actual Worker.
+# This wrangler.toml should be used EXCLUSIVELY for testing.
+name = "flareutils"
+no_bundle = true
+main = "dist/worker.js"
+compatibility_date = "2023-02-28"
+
+kv_namespaces = [
+  { binding = "KV", id = "foo", preview_id = "bar" }
+]
+
+[build]
+command = "node tests/build.js"
+watch_dir = "tests/worker"

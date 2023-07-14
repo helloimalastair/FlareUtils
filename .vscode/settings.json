@@ -1,0 +1,8 @@
+{
+  "editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"editor.tabSize": 2,
+	"files.associations": {
+		"_headers": "txt"
+	}
+}
