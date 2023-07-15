@@ -12,7 +12,8 @@
 	"license": "See LICENSE",
 	"author": "helloimalastair",
 	"repository": "github:helloimalastair/flareutils",
-	"main": "src/index.ts",
+	"main": "dist/index.js",
+	"typings": "dist/index.d.ts",
 	"scripts": {
 		"check": "tsc",
 		"test": "NODE_NO_WARNINGS=1 vitest run",
@@ -41,5 +42,5 @@
 				"@algolia/client-search"
 			]
 		}
-	}	
+	}
 }

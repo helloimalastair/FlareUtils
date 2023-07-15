@@ -3,12 +3,11 @@ import { readdirSync, statSync, writeFileSync } from "fs";
 
 const getAllFiles = (dirPath: string) => {
   const data: string[] = [];
-
   readdirSync(dirPath).forEach((file) => {
     if (statSync(`${dirPath}/${file}`).isDirectory()) {
       data.push(...getAllFiles(`${dirPath}/${file}`));
     } else if(file.endsWith(".html") && !file.startsWith("404")) {
-      data.push(`https://flareutils.pages.dev/${dirPath.replace("dist/docs", "")}/${file.replace(/(index\.html)|(\.html)/g, "")}/`.replaceAll(/\/{2,}/g, "/"));
+      data.push(`https://flareutils.pages.dev/${dirPath.replace("temp/docs", "")}/${file.replace(/(index\.html)|(\.html)/g, "")}/`.replaceAll(/\/{2,}/g, "/"));
     }
   });
   return data;
@@ -19,11 +18,11 @@ export default defineConfig({
   lang: "en-US",
   description: "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
   cleanUrls: true,
-  cacheDir: "../dist/cache",
-  outDir: "../dist/docs",
+  cacheDir: "../temp/cache",
+  outDir: "../temp/docs",
   ignoreDeadLinks: true,
   buildEnd() {
-    writeFileSync("dist/docs/sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${getAllFiles("dist/docs").map(e => `<url><loc>${e}</loc></url>`).join("")}</urlset>`);
+    writeFileSync("temp/docs/sitemap.xml", `<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${getAllFiles("temp/docs").map(e => `<url><loc>${e}</loc></url>`).join("")}</urlset>`);
   },
   themeConfig: {
     algolia: {
