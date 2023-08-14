@@ -7,9 +7,10 @@ Flareutils is subject to [the MIT License](/license), which means, if you believ
 Note, this documentation acts as a suplement to the Typedoc annotations present in the code. Using a tool like VSCode IntelliSense, you can have your IDE show you the exact documentation for a function/class as you type.
 
 Flareutils consists of **6** separate utilities:
-* [BetterKV](/betterkv/)
-* [Isaac](/isaac/)
-* [MailChannels](/mailchannels/)
-* [Phonetic](/phonetic/)
-* [Stubby](/stubby/)
-* [Temra](/temra/)
+
+- [BetterKV](/betterkv/)
+- [Isaac](/isaac/)
+- [MailChannels](/mailchannels/)
+- [Phonetic](/phonetic/)
+- [Stubby](/stubby/)
+- [Temra](/temra/)

@@ -1,36 +1,35 @@
 export declare interface MailChannelsEmailAddress {
-  email: string;
-  name?: string;
+	email: string;
+	name?: string;
 }
 export declare interface MailChannelsBodyObjects {
-  type: string;
-  value: string;
+	type: string;
+	value: string;
 }
 export declare interface MailChannelsHeaders {
-  [key: string]: string;
+	[key: string]: string;
 }
 
 export declare interface MailChannelsPersonalizations {
-  to: MailChannelsEmailAddress[];
-  from: MailChannelsEmailAddress;
-  reply_to: MailChannelsEmailAddress;
-  cc?: MailChannelsEmailAddress[];
-  bcc?: MailChannelsEmailAddress[];
-  subject?: string;
-  dkim_domain?: string;
-  dkim_private_key?: string;
-  dkim_selector?: string;
-  headers?: MailChannelsHeaders;
+	to: MailChannelsEmailAddress[];
+	from: MailChannelsEmailAddress;
+	reply_to: MailChannelsEmailAddress;
+	cc?: MailChannelsEmailAddress[];
+	bcc?: MailChannelsEmailAddress[];
+	subject?: string;
+	dkim_domain?: string;
+	dkim_private_key?: string;
+	dkim_selector?: string;
+	headers?: MailChannelsHeaders;
 }
 export declare interface MailChannelsOptions {
-  personalizations?: MailChannelsPersonalizations;
-  from: MailChannelsEmailAddress;
-  reply_to?: MailChannelsEmailAddress;
-  subject?: string;
-  content?: MailChannelsBodyObjects[];
-  headers?: MailChannelsHeaders;
+	personalizations?: MailChannelsPersonalizations;
+	from: MailChannelsEmailAddress;
+	reply_to?: MailChannelsEmailAddress;
+	subject?: string;
+	content?: MailChannelsBodyObjects[];
+	headers?: MailChannelsHeaders;
 }
-
 
 /**
  * Helper to quickly send emails with the MailChannels API.
@@ -42,12 +41,12 @@ export declare interface MailChannelsOptions {
  * ```
  */
 export async function sendMail(opts: MailChannelsOptions): Promise<Response> {
-  return fetch("https://api.mailchannels.net/tx/v1/send", {
-    headers: {
-      "content-type": "application/json",
-      "accept": "application/json"
-    },
-    method: "POST",
-    body: JSON.stringify(opts),
-  });
+	return fetch("https://api.mailchannels.net/tx/v1/send", {
+		headers: {
+			"content-type": "application/json",
+			accept: "application/json",
+		},
+		method: "POST",
+		body: JSON.stringify(opts),
+	});
 }

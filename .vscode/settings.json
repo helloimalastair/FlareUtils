@@ -1,0 +1,14 @@
+{
+	"editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"editor.tabSize": 2,
+	"files.associations": {
+		"_headers": "txt",
+		"*.json": "jsonc"
+	},
+	"explorer.fileNesting.enabled": true,
+	"explorer.fileNesting.patterns": {
+		"package.json": "pnpm-lock.yaml, tsconfig.json, .gitignore, .eslintrc, .eslintignore, .prettierrc, .prettierignore",
+		"README.md": "LICENSE"
+	}
+}
