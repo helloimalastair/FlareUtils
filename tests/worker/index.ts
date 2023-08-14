@@ -6,5 +6,5 @@ const hono = new Hono();
 hono.get("/phonetic", phonetic);
 
 export default {
-  fetch: hono.fetch,
+	fetch: hono.fetch,
 };

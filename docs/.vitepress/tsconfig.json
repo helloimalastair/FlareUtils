@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["esnext"],
-    "declaration": true,
-    "moduleResolution": "node",
-    "strict": true,
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"lib": ["esnext"],
+		"declaration": true,
+		"moduleResolution": "node",
+		"strict": true,
 		"outDir": "dist",
 		"sourceMap": true
-  },
-  "include": ["config.ts"]
+	},
+	"include": ["config.ts"]
 }

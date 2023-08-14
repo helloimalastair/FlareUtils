@@ -1,16 +1,14 @@
 {
-  "compilerOptions": {
-    "target": "esnext",
-    "module": "esnext",
-    "lib": ["esnext"],
-    "declaration": true,
-    "types": [
-      "@cloudflare/workers-types"
-    ],
-    "moduleResolution": "node",
-    "strict": true,
+	"compilerOptions": {
+		"target": "esnext",
+		"module": "esnext",
+		"lib": ["esnext"],
+		"declaration": true,
+		"types": ["@cloudflare/workers-types"],
+		"moduleResolution": "node",
+		"strict": true,
 		"outDir": "dist",
 		"sourceMap": true
-  },
-  "include": ["src"]
+	},
+	"include": ["src"]
 }
