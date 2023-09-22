@@ -39,6 +39,13 @@ While a BetterKV Namespace must be initiated during a Request(and not at startup
 bKv.setWaitUntil(ctx.waitUntil.bind(ctx));
 ```
 
+## Cache Status
+
+The [`getWithMetadata`](/betterkv/#getwithmetadata) and [`list`](/betterkv/#list) methods expose a field labeled `cacheStatus`. This field is a string that can be one of the following:
+- If the status is **MISS**, your query hit KV directly, and was subsequently added to the cache.
+- If the status was **HIT**, your query was served directly from the cache, saving you some money! Yay for you!
+- If the status was **REVALIDATED**, your query was served from cache, but a background revalidation was triggered. This ensures that your data is kept fresh, while still cutting down on the number of billable queries you have. Note that REVALIDATED will only appear with BetterKV, and not BetterKV(old).
+
 ## Methods
 
 ### get
