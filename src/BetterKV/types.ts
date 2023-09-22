@@ -9,9 +9,12 @@ type BetterKVPutValues =
 	| ArrayBufferView
 	| ReadableStream;
 
+type BetterKVCacheStatus = "HIT" | "MISS" | "REVALIDATED";
+
 interface BetterKVWithMetadata<V, M> {
 	value: V;
 	metadata: M | null;
+	cacheStatus: BetterKVCacheStatus;
 }
 
 interface BetterKVPutOptions<Metadata = unknown> {
@@ -19,6 +22,11 @@ interface BetterKVPutOptions<Metadata = unknown> {
 	expirationTtl?: number;
 	metadata?: Metadata;
 }
+
+type BetterKVListReturns<Metadata = unknown> =
+	KVNamespaceListResult<Metadata> & {
+		cacheStatus: BetterKVCacheStatus;
+	};
 
 interface BetterKVConfig {
 	/**
@@ -56,4 +64,6 @@ export {
 	BetterKVConfig,
 	BetterKVValueOptions,
 	BetterKVPutValues,
+	BetterKVCacheStatus,
+	BetterKVListReturns,
 };

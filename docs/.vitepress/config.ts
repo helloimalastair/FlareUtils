@@ -68,6 +68,7 @@ export default defineConfig({
 					{ text: "BetterKV", link: "/betterkv/" },
 					{ text: "Isaac", link: "/isaac/" },
 					{ text: "MailChannels", link: "/mailchannels/" },
+					{ text: "PromiseQueue", link: "/promisequeue/" },
 					{ text: "Phonetic", link: "/phonetic/" },
 					{ text: "Stubby", link: "/stubby/" },
 					{ text: "Temra", link: "/temra/" },

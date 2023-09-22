@@ -4,7 +4,7 @@
 		"module": "esnext",
 		"lib": ["esnext"],
 		"declaration": true,
-		"types": ["@cloudflare/workers-types"],
+		"types": ["@cloudflare/workers-types/experimental"],
 		"moduleResolution": "node",
 		"strict": true,
 		"outDir": "dist",

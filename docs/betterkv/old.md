@@ -54,14 +54,14 @@ const jsonValue = await bKv.get<MyType>("json", {
 ### getWithMetadata
 
 ```ts
-const { value, metadata } = await bKv.getWithMetadata("key");
-const { longer, longerMetadata } = await bKv.getWithMetadata("key", {
+const { value, metadata, ca } = await bKv.getWithMetadata("key");
+const { value: longer, metadata: longerMetadata } = await bKv.getWithMetadata("key", {
   cacheTtl: 60 * 60 * 24 * 7 // 1 week
 });
-const { buff, buffMetadata } = await bKv.getWithMetadata("buffer", {
+const { value: buff, metadata: buffMetadata } = await bKv.getWithMetadata("buffer", {
   type: "buffer"
 });
-const { jsonValue, jsonMetadata } = await bKv.getWithMetadata<MyType>("json", {
+const { value: jsonValue, metadata: jsonMetadata, cacheStatus } = await bKv.getWithMetadata<MyType>("json", {
   cacheTtl: 60 * 60 * 24 * 7 // 1 week,
   type: "json"
 });

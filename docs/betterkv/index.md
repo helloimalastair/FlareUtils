@@ -1,7 +1,7 @@
 # BetterKV
 
 ::: danger NOTE
-This version of BetterKV is built for [KV v2](https://blog.cloudflare.com/faster-workers-kv-architecture/). If you are using KV v1, please refer to [BetterKV (old)](/betterkv/old).
+~~This version of BetterKV is built for [KV v2](https://blog.cloudflare.com/faster-workers-kv-architecture/).~~ KV v2 is currently being rebuilt, and thus is not available. The new BetterKV should still help you reduce costs while revalidating quicker. If you want to stick with the original BetterKV experience, then please refer to [BetterKV (old)](/betterkv/old).
 :::
 
 A Storage namespace that uses the Cloudflare Workers [KV API](https://developers.cloudflare.com/workers/runtime-apis/kv) to store data, with a [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache) backing that allows you to reduce your KV billable reads. Follows the best practices recommended by Cloudflare Engineers, storing data in cache for a short period of time, and exponentially increasing the likelihood it will refresh before the cached value expires.
@@ -54,15 +54,13 @@ const json = await bKv.get<MyType>("key", "json");
 ### getWithMetadata
 
 ```ts
-const { value, metadata } = await bKv.getWithMetadata("key");
-const { buff, buffMetadata } = await bKv.getWithMetadata(
+const { value, metadata, cacheStatus } = await bKv.getWithMetadata("key");
+const { buff, buffMetadata, cacheStatus } = await bKv.getWithMetadata(
 	"vampireslayr",
 	"buffer",
 );
-const { jsonValue, jsonMetadata } = await bKv.getWithMetadata<MyType>(
-	"notxml",
-	"json",
-);
+const { jsonValue, jsonMetadata, cacheStatus } =
+	await bKv.getWithMetadata<MyType>("notxml", "json");
 ```
 
 ### put
@@ -83,7 +81,7 @@ await bKv.put("buffer", buffer, {
 
 ```ts
 const { keys } = await bKv.list();
-const { keys, list_complete, cursor } = await bKv.list({
+const { keys, list_complete, cursor, cacheStatus } = await bKv.list({
 	prefix: "some-prefix",
 	limit: 1000,
 });

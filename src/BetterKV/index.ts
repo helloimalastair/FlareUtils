@@ -4,13 +4,14 @@ import type {
 	BetterKVWithMetadata,
 	BetterKVPutOptions,
 	BetterKVPutValues,
+	BetterKVListReturns,
 } from "./types";
 
 /**
  * A Storage namespace that uses the Cloudflare Workers [KV API](https://developers.cloudflare.com/workers/runtime-apis/kv) to store data, with a [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache) backing that allows you to reduce your KV billable reads.
  *
  * For the most part, *BetterKV* should match to the Workers *KVNamespace* standard, other than how it is instantiated, and all methods(except delete) will be cached according to the configured `cacheTtl`. For the *KVNamespace* API, see the [types](https://github.com/cloudflare/workers-types) supplied by Cloudflare.
- * 
+ *
  * @note This version of BetterKV supports KV v2. If you require support for KV v1, please import `BetterKVOld`.
  */
 export class BetterKV {
@@ -227,7 +228,9 @@ export class BetterKV {
 						this.config.probabilityGrowth,
 						Date.now() - created - this.config.cacheTtl,
 				  );
+			let revalidated = false;
 			if (Math.random() < probability) {
+				revalidated = true;
 				const a = async () => {
 					const newResponse = await this.getFromOrigin(key);
 					if (newResponse) {
@@ -245,18 +248,21 @@ export class BetterKV {
 					return {
 						value: await bodyVal.json<JSONValue>(),
 						metadata,
+						cacheStatus: revalidated ? "REVALIDATED" : "HIT",
 					};
 				}
 				case "arrayBuffer": {
 					return {
 						value: await bodyVal.arrayBuffer(),
 						metadata,
+						cacheStatus: revalidated ? "REVALIDATED" : "HIT",
 					};
 				}
 				case "stream": {
 					return {
 						value: bodyVal.body as ReadableStream,
 						metadata,
+						cacheStatus: revalidated ? "REVALIDATED" : "HIT",
 					};
 				}
 				case "text":
@@ -264,6 +270,7 @@ export class BetterKV {
 					return {
 						value: await bodyVal.text(),
 						metadata,
+						cacheStatus: revalidated ? "REVALIDATED" : "HIT",
 					};
 				}
 			}
@@ -276,18 +283,21 @@ export class BetterKV {
 				return {
 					value: await originResponse.res.json<JSONValue>(),
 					metadata: originResponse.meta,
+					cacheStatus: "MISS",
 				};
 			}
 			case "arrayBuffer": {
 				return {
 					value: await originResponse.res.arrayBuffer(),
 					metadata: originResponse.meta,
+					cacheStatus: "MISS",
 				};
 			}
 			case "stream": {
 				return {
 					value: originResponse.res.body as ReadableStream,
 					metadata: originResponse.meta,
+					cacheStatus: "MISS",
 				};
 			}
 			case "text":
@@ -295,6 +305,7 @@ export class BetterKV {
 				return {
 					value: await originResponse.res.text(),
 					metadata: originResponse.meta,
+					cacheStatus: "MISS",
 				};
 			}
 		}
@@ -367,7 +378,7 @@ export class BetterKV {
 	 */
 	async list<M = unknown>(
 		opts?: KVNamespaceListOptions,
-	): Promise<KVNamespaceListResult<M>> {
+	): Promise<BetterKVListReturns<M>> {
 		const cache = await this.getCache();
 		const cacheKey = new URL("https://list.better.kv");
 		let limit = 1000;
@@ -399,7 +410,9 @@ export class BetterKV {
 						this.config.probabilityGrowth,
 						Date.now() - created - this.config.cacheTtl,
 				  );
+			let revalidated = false;
 			if (Math.random() < probability) {
+				revalidated = true;
 				const a = async () => {
 					const newResponse = await this.KV.list<M>({ prefix, limit, cursor });
 					if (newResponse) {
@@ -417,7 +430,11 @@ export class BetterKV {
 				};
 				this.waitUntil(a());
 			}
-			return (await bodyVal.json()) as KVNamespaceListResult<M>;
+			const res = (await bodyVal.json()) as KVNamespaceListResult<M>;
+			return {
+				...res,
+				cacheStatus: revalidated ? "REVALIDATED" : "HIT",
+			};
 		}
 		const result = await this.KV.list<M>({ prefix, limit, cursor });
 		this.waitUntil(
@@ -430,7 +447,10 @@ export class BetterKV {
 				}),
 			),
 		);
-		return result;
+		return {
+			...result,
+			cacheStatus: "MISS",
+		};
 	}
 }
 

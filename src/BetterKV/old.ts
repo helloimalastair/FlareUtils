@@ -1,3 +1,4 @@
+import type { BetterKVCacheStatus, BetterKVListReturns } from "./types";
 export declare type BetterKVGetReturns<V = unknown> =
 	| string
 	| V
@@ -17,6 +18,7 @@ export declare interface BetterKVGetOptions {
 export declare interface BetterKVWithMetadata<V, M> {
 	value: V | null;
 	metadata: M | null;
+	cacheStatus: BetterKVCacheStatus;
 }
 
 export declare interface BetterKVPutOptions<K = unknown> {
@@ -50,7 +52,7 @@ function normalizeCacheTtl(cacheTtl?: number): number {
  * A Storage namespace that uses the Cloudflare Workers [KV API](https://developers.cloudflare.com/workers/runtime-apis/kv) to store data, with a [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache) backing that allows you to reduce your KV billable reads.
  *
  * For the most part, *BetterKV* should match to the Workers *KVNamespace* standard, other than how it is instantiated, and all methods(except delete) support cacheTtl. For the *KVNamespace* API, see the [types](https://github.com/cloudflare/workers-types) supplied by Cloudflare.
- * 
+ *
  * @note This version of BetterKV is provided for backwards compatibility with KV v1. For projects using KV v2, use the regular `BetterKV` import.
  */
 export class BetterKVOld {
@@ -295,21 +297,25 @@ export class BetterKVOld {
 					return {
 						value: await bodyVal.json(),
 						metadata,
+						cacheStatus: "HIT",
 					};
 				case "arrayBuffer":
 					return {
 						value: await bodyVal.arrayBuffer(),
 						metadata,
+						cacheStatus: "HIT",
 					};
 				case "stream":
 					return {
 						value: bodyVal.body,
 						metadata,
+						cacheStatus: "HIT",
 					};
 				default:
 					return {
 						value: await bodyVal.text(),
 						metadata,
+						cacheStatus: "HIT",
 					};
 			}
 		}
@@ -325,7 +331,10 @@ export class BetterKVOld {
 				this.waitUntil(
 					cache.put(cacheKey, new Response(textVal.value, { headers })),
 				);
-				return textVal;
+				return {
+					...textVal,
+					cacheStatus: "MISS",
+				};
 			}
 			case "json": {
 				const jsonVal = await this.kv.getWithMetadata<V, M>(key, {
@@ -340,7 +349,10 @@ export class BetterKVOld {
 						new Response(JSON.stringify(jsonVal), { headers }),
 					),
 				);
-				return jsonVal;
+				return {
+					...jsonVal,
+					cacheStatus: "MISS",
+				};
 			}
 			case "arrayBuffer": {
 				const bufVal = await this.kv.getWithMetadata<M>(key, {
@@ -352,7 +364,10 @@ export class BetterKVOld {
 				this.waitUntil(
 					cache.put(cacheKey, new Response(bufVal.value, { headers })),
 				);
-				return bufVal;
+				return {
+					...bufVal,
+					cacheStatus: "MISS",
+				};
 			}
 			case "stream": {
 				const streamVal = await this.kv.getWithMetadata<M>(key, {
@@ -364,7 +379,10 @@ export class BetterKVOld {
 				this.waitUntil(
 					cache.put(cacheKey, new Response(streamVal.value, { headers })),
 				);
-				return streamVal;
+				return {
+					...streamVal,
+					cacheStatus: "MISS",
+				};
 			}
 		}
 		return null;
@@ -436,7 +454,7 @@ export class BetterKVOld {
 	 */
 	async list<M = unknown>(
 		opts?: BetterKVListOptions,
-	): Promise<KVNamespaceListResult<M>> {
+	): Promise<BetterKVListReturns<M>> {
 		const cache = await this.getCache();
 		const cacheKey = new URL("https://list.better.kv");
 		let cacheTtl = 60;
@@ -471,7 +489,11 @@ export class BetterKVOld {
 				`max-age=${cacheTtl}`,
 			);
 			this.waitUntil(cache.put(cacheKey.toString(), bodyVal));
-			return (await bodyVal.json()) as KVNamespaceListResult<M>;
+			const res = (await bodyVal.json()) as KVNamespaceListResult<M>;
+			return {
+				...res,
+				cacheStatus: "HIT",
+			};
 		}
 		const result = await this.kv.list<M>({ prefix, limit, cursor });
 		this.waitUntil(
@@ -482,6 +504,9 @@ export class BetterKVOld {
 				}),
 			),
 		);
-		return result;
+		return {
+			...result,
+			cacheStatus: "MISS",
+		};
 	}
 }

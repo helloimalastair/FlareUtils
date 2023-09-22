@@ -1,6 +1,6 @@
 {
 	"name": "flareutils",
-	"version": "0.4.0",
+	"version": "0.5.0",
 	"type": "module",
 	"description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
 	"keywords": [
@@ -29,20 +29,20 @@
 		"README.md"
 	],
 	"devDependencies": {
-		"@cloudflare/workers-types": "^4.20230807.0",
-		"@typescript-eslint/eslint-plugin": "^6.3.0",
-		"esbuild": "^0.19.2",
-		"eslint": "^8.47.0",
-		"eslint-plugin-import": "^2.28.0",
+		"@cloudflare/workers-types": "^4.20230914.0",
+		"@typescript-eslint/eslint-plugin": "^6.7.2",
+		"esbuild": "^0.19.3",
+		"eslint": "^8.49.0",
+		"eslint-plugin-import": "^2.28.1",
 		"eslint-plugin-unused-imports": "^3.0.0",
-		"hono": "^3.4.3",
-		"prettier": "^3.0.1",
-		"typescript": "^5.1.6",
-		"vitepress": "1.0.0-rc.4",
-		"vitest": "^0.34.1",
-		"vitest-environment-miniflare": "^2.14.0",
+		"hono": "^3.7.1",
+		"prettier": "^3.0.3",
+		"typescript": "^5.2.2",
+		"vitepress": "1.0.0-rc.15",
+		"vitest": "^0.34.5",
+		"vitest-environment-miniflare": "^2.14.1",
 		"vue": "^3.3.4",
-		"wrangler": "^3.5.0"
+		"wrangler": "^3.9.0"
 	},
 	"pnpm": {
 		"peerDependencyRules": {
