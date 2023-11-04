@@ -8,7 +8,7 @@
 	},
 	"explorer.fileNesting.enabled": true,
 	"explorer.fileNesting.patterns": {
-		"package.json": "pnpm-lock.yaml, tsconfig.json, .gitignore, .eslintrc, .eslintignore, .prettierrc, .prettierignore",
+		"package.json": "bun.lockb, tsconfig.json, .gitignore, .gitattributes, .eslintrc, .eslintignore, .prettierrc, .prettierignore",
 		"README.md": "LICENSE"
 	}
 }

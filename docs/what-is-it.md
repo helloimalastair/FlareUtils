@@ -6,7 +6,7 @@ Flareutils is subject to [the MIT License](/license), which means, if you believ
 
 Note, this documentation acts as a suplement to the Typedoc annotations present in the code. Using a tool like VSCode IntelliSense, you can have your IDE show you the exact documentation for a function/class as you type.
 
-Flareutils consists of **7** separate utilities:
+Flareutils consists of **8** separate utilities:
 
 - [BetterKV](/betterkv/)
 - [Isaac](/isaac/)
@@ -15,3 +15,4 @@ Flareutils consists of **7** separate utilities:
 - [Stubby](/stubby/)
 - [Temra](/temra/)
 - [PromiseQueue](/promisequeue/)
+- [Resizer](/resizer/)

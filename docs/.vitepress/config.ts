@@ -72,6 +72,7 @@ export default defineConfig({
 					{ text: "Phonetic", link: "/phonetic/" },
 					{ text: "Stubby", link: "/stubby/" },
 					{ text: "Temra", link: "/temra/" },
+					{ text: "Resizer", link: "/resizer/" },
 				],
 			},
 		],
