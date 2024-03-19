@@ -1,7 +1,7 @@
 # BetterKV
 
 ::: danger NOTE
-~~This version of BetterKV is built for [KV v2](https://blog.cloudflare.com/faster-workers-kv-architecture/).~~ KV v2 is currently being rebuilt, and thus is not available. The new BetterKV should still help you reduce costs while revalidating quicker. If you want to stick with the original BetterKV experience, then please refer to [BetterKV (old)](/betterkv/old).
+~~This version of BetterKV is built for [KV v2](https://web.archive.org/web/20230629130349/https://blog.cloudflare.com/faster-workers-kv-architecture/).~~ KV v2 is currently being rebuilt, and thus is not available. The new BetterKV should still help you reduce costs while revalidating quicker. If you want to stick with the original BetterKV experience, then please refer to [BetterKV (old)](/betterkv/old).
 :::
 
 A Storage namespace that uses the Cloudflare Workers [KV API](https://developers.cloudflare.com/workers/runtime-apis/kv) to store data, with a [Cache API](https://developers.cloudflare.com/workers/runtime-apis/cache) backing that allows you to reduce your KV billable reads. Follows the best practices recommended by Cloudflare Engineers, storing data in cache for a short period of time, and exponentially increasing the likelihood it will refresh before the cached value expires.

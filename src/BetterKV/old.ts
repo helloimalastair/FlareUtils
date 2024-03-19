@@ -400,17 +400,17 @@ export class BetterKVOld {
 	async put<M = unknown>(
 		key: string,
 		val: BetterKVValueOptions,
-		options: BetterKVPutOptions<M>,
+		options?: BetterKVPutOptions<M>,
 	): Promise<void> {
 		const cache = await this.getCache();
 		const cacheKey = this.url + key;
-		const cacheTtl = options.cacheTtl
+		const cacheTtl = options?.cacheTtl
 			? normalizeCacheTtl(options.cacheTtl)
 			: 60;
 		const headers = new Headers({
 			"Cloudflare-CDN-Cache-Control": `max-age=${cacheTtl}`,
 		});
-		if (options.metadata)
+		if (options?.metadata)
 			headers.set("metadata", JSON.stringify(options.metadata));
 		if (typeof val === "string" || val instanceof ArrayBuffer) {
 			this.waitUntil(cache.put(cacheKey, new Response(val, { headers })));

@@ -146,7 +146,7 @@ export class BetterKV {
 				: Math.pow(
 						this.config.probabilityGrowth,
 						Date.now() - created - this.config.cacheTtl,
-				  );
+					);
 			if (Math.random() < probability) {
 				const a = async () => {
 					const newResponse = await this.getFromOrigin(key);
@@ -227,7 +227,7 @@ export class BetterKV {
 				: Math.pow(
 						this.config.probabilityGrowth,
 						Date.now() - created - this.config.cacheTtl,
-				  );
+					);
 			let revalidated = false;
 			if (Math.random() < probability) {
 				revalidated = true;
@@ -309,7 +309,6 @@ export class BetterKV {
 				};
 			}
 		}
-		return null;
 	}
 
 	/**
@@ -324,7 +323,7 @@ export class BetterKV {
 	async put<Metadata = unknown>(
 		key: string,
 		val: BetterKVPutValues,
-		options: BetterKVPutOptions<Metadata>,
+		options?: BetterKVPutOptions<Metadata>,
 	): Promise<void> {
 		const cache = await this.getCache();
 		const cacheKey = this.URL + key;
@@ -344,7 +343,7 @@ export class BetterKV {
 					headers: {
 						"cloudflare-cdn-cache-control": `max-age=${this.config.cacheTtl}`,
 						"betterkv-internal-created": Date.now().toString(),
-						"betterkv-internal-meta": options.metadata
+						"betterkv-internal-meta": options?.metadata
 							? JSON.stringify(options.metadata)
 							: "{}",
 					},
@@ -409,7 +408,7 @@ export class BetterKV {
 				: Math.pow(
 						this.config.probabilityGrowth,
 						Date.now() - created - this.config.cacheTtl,
-				  );
+					);
 			let revalidated = false;
 			if (Math.random() < probability) {
 				revalidated = true;

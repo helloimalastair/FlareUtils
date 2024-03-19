@@ -13,7 +13,7 @@ export class PromiseQueue {
 	 * Add a promise to the queue. Always await this function.
 	 * @param promise The promise to add to the queue.
 	 */
-	async add(promise: Promise<unknown>) {
+	async add(promise: Promise<unknown>): Promise<void> {
 		this.queue.push(promise);
 		if (this.queue.length === CONCURRENCY) {
 			const completed = await Promise.race(
@@ -22,7 +22,7 @@ export class PromiseQueue {
 					return i;
 				}),
 			);
-			this.queue = this.queue.splice(completed, 1);
+			void(this.queue = this.queue.splice(completed, 1));
 		}
 	}
 
