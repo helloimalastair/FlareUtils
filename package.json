@@ -1,21 +1,22 @@
 {
   "name": "flareutils",
-  "version": "0.6.1",
+  "version": "0.6.2",
   "author": "helloimalastair",
   "repository": "github:helloimalastair/flareutils",
   "main": "dist/index.js",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240314.0",
-    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@cloudflare/workers-types": "^4.20240405.0",
+    "@eslint/js": "^9.0.0",
     "esbuild": "^0.20.2",
-    "eslint": "^8.57.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-unused-imports": "^3.1.0",
     "prettier": "^3.2.5",
-    "typescript": "5.2.2",
-    "vitepress": "1.0.0-rc.45",
+    "typescript": "^5.4.4",
+    "typescript-eslint": "^7.6.0",
+    "vitepress": "1.0.2",
     "vue": "^3.4.21",
-    "wrangler": "^3.34.2"
+    "wrangler": "^3.48.0"
   },
   "description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
   "files": [
@@ -34,7 +35,7 @@
   "scripts": {
     "dev": "vitepress dev docs",
     "pretty": "prettier --write .",
-    "lint": "eslint --ext .ts src",
+    "lint": "eslint src",
     "build": "tsc",
     "build:docs": "vitepress build docs"
   },
