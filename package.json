@@ -1,6 +1,6 @@
 {
   "name": "flareutils",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "author": "helloimalastair",
   "repository": "github:helloimalastair/flareutils",
   "main": "dist/index.js",
