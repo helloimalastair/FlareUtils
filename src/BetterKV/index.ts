@@ -59,7 +59,7 @@ export class BetterKV {
 		this.config = {
 			cacheSpace: undefined,
 			probabilityGrowth: 1.28,
-			cacheTtl: 50,
+			cacheTtl: 55,
 			kvCacheTtl: 3.15576e7,
 			...config,
 		};
@@ -145,7 +145,7 @@ export class BetterKV {
 				? 1
 				: Math.pow(
 						this.config.probabilityGrowth,
-						Date.now() - created - this.config.cacheTtl,
+						Date.now() - created - this.config.cacheTtl * 1e3,
 					);
 			if (Math.random() < probability) {
 				const a = async () => {
