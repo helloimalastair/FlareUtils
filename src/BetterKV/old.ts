@@ -154,7 +154,7 @@ export class BetterKVOld {
 	): Promise<BetterKVGetReturns | null> {
 		const cache = await this.getCache();
 		const cacheKey = this.url + key;
-		let cacheTTL: number = 60;
+		let cacheTTL = 60;
 		let type = "text";
 		if (options) {
 			if (options.cacheTtl) {
@@ -268,7 +268,7 @@ export class BetterKVOld {
 	): Promise<BetterKVWithMetadata<BetterKVGetReturns, M> | null> {
 		const cache = await this.getCache();
 		const cacheKey = this.url + key;
-		let cacheTTL: number = 60;
+		let cacheTTL = 60;
 		let type = "text";
 		if (options) {
 			if (options.cacheTtl) {

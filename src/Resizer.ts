@@ -66,8 +66,7 @@ async function resizeImage(
 	// Return resized image
 	if (config.returnType === "buffer") {
 		return resizedImage.arrayBuffer();
-	} else {
-		return resizedImage.body;
 	}
+	return resizedImage.body;
 }
 export { resizeImage };

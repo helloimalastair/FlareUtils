@@ -1,5 +1,5 @@
+import { readdirSync, statSync, writeFileSync } from "node:fs";
 import { defineConfig } from "vitepress";
-import { readdirSync, statSync, writeFileSync } from "fs";
 
 const getAllFiles = (dirPath: string) => {
 	const data: string[] = [];

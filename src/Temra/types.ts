@@ -27,7 +27,7 @@ interface TransformationOptionals<Environment = unknown, Optionals = unknown> {
 	other?: Optionals;
 }
 
-export {
+export type {
 	ReplaceFunction,
 	SelectorType,
 	AddOptions,

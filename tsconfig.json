@@ -7,8 +7,7 @@
 		"types": ["@cloudflare/workers-types"],
 		"moduleResolution": "node",
 		"strict": true,
-		"outDir": "dist",
-		"sourceMap": true
+		"noEmit": true
 	},
 	"include": ["src"]
 }

@@ -33,7 +33,7 @@
  *
  * ISAAC succesfully passed TestU01
  */
-import { toIntArray, add, seed_mix } from "./helpers";
+import { add, seed_mix, toIntArray } from "./helpers";
 import type { DrandResponse, IsaacSeed } from "./types";
 
 /**
@@ -114,6 +114,7 @@ export class Isaac {
 			if (s)
 				/* use all the information in the seed */
 				for (let j = 0; j < 8; j++) arr[j] = add(arr[j], this.r[i + j]);
+			// biome-ignore lint/style/noParameterAssign: vendored code, do not modify
 			arr = seed_mix(arr);
 			/* fill in m[] with messy stuff */
 			for (let j = 0; j < 8; j++) this.m[i + j] = arr[j];

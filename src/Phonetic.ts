@@ -40,7 +40,7 @@ export class Phonetic {
 	 * @example
 	 * const phonetic = phonetic.rand(10);
 	 */
-	rand(len: number = 10): string {
+	rand(len = 10): string {
 		let id = "";
 		const start = Math.round(this.generator());
 		for (let i = 0; i < len; i++)

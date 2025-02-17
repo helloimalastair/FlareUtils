@@ -1,44 +1,32 @@
 {
-  "name": "flareutils",
-  "version": "0.6.3",
-  "author": "helloimalastair",
-  "repository": "github:helloimalastair/flareutils",
-  "main": "dist/index.js",
-  "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240405.0",
-    "@eslint/js": "^9.0.0",
-    "esbuild": "^0.20.2",
-    "eslint": "^9.0.0",
-    "eslint-plugin-import": "^2.29.1",
-    "eslint-plugin-unused-imports": "^3.1.0",
-    "prettier": "^3.2.5",
-    "typescript": "^5.4.4",
-    "typescript-eslint": "^7.6.0",
-    "vitepress": "1.0.2",
-    "vue": "^3.4.21",
-    "wrangler": "^3.48.0"
-  },
-  "description": "Small Utilities and little goodies that make developing with Cloudflare easier and faster.",
-  "files": [
-    "dist",
-    "tsconfig.json",
-    "LICENSE",
-    "README.md"
-  ],
-  "homepage": "https://flareutils.pages.dev",
-  "keywords": [
-    "flare",
-    "utilies",
-    "cloudflare"
-  ],
-  "license": "See LICENSE",
-  "scripts": {
-    "dev": "vitepress dev docs",
-    "pretty": "prettier --write .",
-    "lint": "eslint src",
-    "build": "tsc",
-    "build:docs": "vitepress build docs"
-  },
-  "type": "module",
-  "typings": "dist/index.d.ts"
+	"name": "flareutils",
+	"version": "0.6.4",
+	"type": "module",
+	"main": "dist/index.js",
+	"license": "See LICENSE",
+	"author": "helloimalastair",
+	"typings": "dist/index.d.ts",
+	"homepage": "https://flareutils.pages.dev",
+	"keywords": ["flare", "utilities", "cloudflare"],
+	"repository": "github:helloimalastair/flareutils",
+	"files": ["dist", "tsconfig.json", "LICENSE", "README.md"],
+	"description": "Small utilities and little goodies that make developing with Cloudflare easier and faster.",
+	"scripts": {
+		"build": "tsup",
+		"check:format": "biome format",
+		"check:lint": "biome lint",
+		"check:types": "tsc"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@cloudflare/workers-types": "^4.20250214.0",
+		"tsup": "^8.3.6",
+		"typescript": "^5.7.3",
+		"vitepress": "1.6.3",
+		"vue": "^3.5.13",
+		"wrangler": "^3.109.1"
+	},
+	"dependencies": {
+		"nanoid": "^5.1.0"
+	}
 }

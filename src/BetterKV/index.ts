@@ -1,10 +1,10 @@
 import type {
 	BetterKVConfig,
 	BetterKVGetReturns,
-	BetterKVWithMetadata,
+	BetterKVListReturns,
 	BetterKVPutOptions,
 	BetterKVPutValues,
-	BetterKVListReturns,
+	BetterKVWithMetadata,
 } from "./types";
 
 /**
@@ -141,12 +141,10 @@ export class BetterKV {
 		const bodyVal = await cache.match(cacheKey);
 		if (bodyVal) {
 			const created = Number(bodyVal.headers.get("betterkv-internal-created"));
-			const probability = isNaN(created)
+			const probability = Number.isNaN(created)
 				? 1
-				: Math.pow(
-						this.config.probabilityGrowth,
-						Date.now() - created - this.config.cacheTtl * 1e3,
-					);
+				: this.config.probabilityGrowth **
+					(Date.now() - created - this.config.cacheTtl * 1e3);
 			if (Math.random() < probability) {
 				const a = async () => {
 					const newResponse = await this.getFromOrigin(key);
@@ -165,7 +163,6 @@ export class BetterKV {
 					return await bodyVal.arrayBuffer();
 				case "stream":
 					return bodyVal.body;
-				case "text":
 				default:
 					return await bodyVal.text();
 			}
@@ -180,7 +177,6 @@ export class BetterKV {
 				return originResponse.res.arrayBuffer();
 			case "stream":
 				return originResponse.res.body;
-			case "text":
 			default:
 				return originResponse.res.text();
 		}
@@ -222,12 +218,10 @@ export class BetterKV {
 		const bodyVal = await cache.match(cacheKey);
 		if (bodyVal) {
 			const created = Number(bodyVal.headers.get("betterkv-internal-created"));
-			const probability = isNaN(created)
+			const probability = Number.isNaN(created)
 				? 1
-				: Math.pow(
-						this.config.probabilityGrowth,
-						Date.now() - created - this.config.cacheTtl,
-					);
+				: this.config.probabilityGrowth **
+					(Date.now() - created - this.config.cacheTtl);
 			let revalidated = false;
 			if (Math.random() < probability) {
 				revalidated = true;
@@ -265,7 +259,6 @@ export class BetterKV {
 						cacheStatus: revalidated ? "REVALIDATED" : "HIT",
 					};
 				}
-				case "text":
 				default: {
 					return {
 						value: await bodyVal.text(),
@@ -300,7 +293,6 @@ export class BetterKV {
 					cacheStatus: "MISS",
 				};
 			}
-			case "text":
 			default: {
 				return {
 					value: await originResponse.res.text(),
@@ -403,12 +395,10 @@ export class BetterKV {
 		const bodyVal = await cache.match(cacheKey.toString());
 		if (bodyVal) {
 			const created = Number(bodyVal.headers.get("betterkv-internal-created"));
-			const probability = isNaN(created)
+			const probability = Number.isNaN(created)
 				? 1
-				: Math.pow(
-						this.config.probabilityGrowth,
-						Date.now() - created - this.config.cacheTtl,
-					);
+				: this.config.probabilityGrowth **
+					(Date.now() - created - this.config.cacheTtl);
 			let revalidated = false;
 			if (Math.random() < probability) {
 				revalidated = true;

@@ -22,7 +22,7 @@ export class PromiseQueue {
 					return i;
 				}),
 			);
-			void (this.queue = this.queue.splice(completed, 1));
+			this.queue = this.queue.splice(completed, 1);
 		}
 	}
 

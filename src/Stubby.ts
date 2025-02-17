@@ -90,9 +90,8 @@ export class Stubby {
 			for (const key of listRet.keys) keys.push(this.kv.delete(key.name));
 			if (listRet.list_complete) {
 				break;
-			} else {
-				cursor = listRet.cursor;
 			}
+			cursor = listRet.cursor;
 		}
 		await Promise.allSettled(keys);
 		this.stubMap.clear();

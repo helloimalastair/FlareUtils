@@ -5,10 +5,5 @@
 	"files.associations": {
 		"_headers": "txt",
 		"*.json": "jsonc"
-	},
-	"explorer.fileNesting.enabled": true,
-	"explorer.fileNesting.patterns": {
-		"package.json": "bun.lockb, tsconfig.json, .gitignore, .gitattributes, .eslintrc, .eslintignore, .prettierrc, .prettierignore",
-		"README.md": "LICENSE"
 	}
 }

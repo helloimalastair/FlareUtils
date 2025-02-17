@@ -57,7 +57,7 @@ type BetterKVValueOptions =
 	| ArrayBufferView
 	| ReadableStream;
 
-export {
+export type {
 	BetterKVGetReturns,
 	BetterKVWithMetadata,
 	BetterKVPutOptions,
