@@ -221,7 +221,7 @@ export class BetterKV {
 			const probability = Number.isNaN(created)
 				? 1
 				: this.config.probabilityGrowth **
-					(Date.now() - created - this.config.cacheTtl);
+					(Date.now() - created - this.config.cacheTtl * 1e3);
 			let revalidated = false;
 			if (Math.random() < probability) {
 				revalidated = true;
