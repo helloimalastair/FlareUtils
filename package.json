@@ -1,32 +1,41 @@
 {
-	"name": "flareutils",
-	"version": "0.6.4",
-	"type": "module",
-	"main": "dist/index.js",
-	"license": "See LICENSE",
-	"author": "helloimalastair",
-	"typings": "dist/index.d.ts",
-	"homepage": "https://flareutils.pages.dev",
-	"keywords": ["flare", "utilities", "cloudflare"],
-	"repository": "github:helloimalastair/flareutils",
-	"files": ["dist", "tsconfig.json", "LICENSE", "README.md"],
-	"description": "Small utilities and little goodies that make developing with Cloudflare easier and faster.",
-	"scripts": {
-		"build": "tsup",
-		"check:format": "biome format",
-		"check:lint": "biome lint",
-		"check:types": "tsc"
-	},
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"@cloudflare/workers-types": "^4.20250214.0",
-		"tsup": "^8.3.6",
-		"typescript": "^5.7.3",
-		"vitepress": "1.6.3",
-		"vue": "^3.5.13",
-		"wrangler": "^3.109.1"
-	},
-	"dependencies": {
-		"nanoid": "^5.1.0"
-	}
+  "name": "flareutils",
+  "version": "0.6.5",
+  "type": "module",
+  "main": "dist/index.js",
+  "license": "See LICENSE",
+  "author": "helloimalastair",
+  "typings": "dist/index.d.ts",
+  "homepage": "https://flareutils.pages.dev",
+  "keywords": [
+    "flare",
+    "utilities",
+    "cloudflare"
+  ],
+  "repository": "github:helloimalastair/flareutils",
+  "files": [
+    "dist",
+    "tsconfig.json",
+    "LICENSE",
+    "README.md"
+  ],
+  "description": "Small utilities and little goodies that make developing with Cloudflare easier and faster.",
+  "scripts": {
+    "build": "tsup",
+    "check:format": "biome format",
+    "check:lint": "biome lint",
+    "check:types": "tsc"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@cloudflare/workers-types": "^4.20250214.0",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3",
+    "vitepress": "1.6.3",
+    "vue": "^3.5.13",
+    "wrangler": "^3.109.1"
+  },
+  "dependencies": {
+    "nanoid": "^5.1.0"
+  }
 }
